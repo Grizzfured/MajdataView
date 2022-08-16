@@ -32,9 +32,14 @@ public class SlideDrop : MonoBehaviour
     List<Vector3> slidePositions = new List<Vector3>();
     List<Quaternion> slideRotations = new List<Quaternion>();
 
+    AudioManager audioManager;
+    bool StarShootSEPlayed;
+
     void Start()
     {
         timeProvider = GameObject.Find("AudioTimeProvider").GetComponent<AudioTimeProvider>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        StarShootSEPlayed = false;
     }
 
     private void OnEnable()
@@ -109,6 +114,7 @@ public class SlideDrop : MonoBehaviour
         }
         setSlideBarAlpha(1f);
         star_slide.SetActive(true);
+
         var timing = timeProvider.AudioTime - time;
         if (timing <= 0f)
         {
@@ -122,6 +128,13 @@ public class SlideDrop : MonoBehaviour
         }
         if (timing > 0f)
         {
+            // SE
+            if (!StarShootSEPlayed)
+            {
+                StarShootSEPlayed = true;
+                audioManager.PlaySE_Slide();
+            }
+
             spriteRenderer_star.color = Color.white;
             star_slide.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 

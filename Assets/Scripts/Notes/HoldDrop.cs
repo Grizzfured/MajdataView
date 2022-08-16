@@ -30,6 +30,11 @@ public class HoldDrop : MonoBehaviour
     SpriteRenderer spriteRenderer;
     SpriteRenderer lineSpriteRender;
     SpriteRenderer exSpriteRender;
+
+    AudioManager audioManager;
+    bool HoldHeadSEPlayed;
+    bool HoldTailSEPlayed;
+
     void Start()
     {
         var notes = GameObject.Find("Notes").transform;
@@ -43,6 +48,11 @@ public class HoldDrop : MonoBehaviour
         exSpriteRender = transform.GetChild(0).GetComponent<SpriteRenderer>();
         
         timeProvider = GameObject.Find("AudioTimeProvider").GetComponent<AudioTimeProvider>();
+
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        HoldHeadSEPlayed = false;
+        HoldTailSEPlayed = false;
+
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         int sortOrder = (int)(time * -100);
@@ -89,9 +99,23 @@ public class HoldDrop : MonoBehaviour
         if (holdTime > 0) {
             GameObject.Find("TapEffects").GetComponent<TapEffectManager>().PlayEffect(startPosition, false);
             GameObject.Find("ObjectCount").GetComponent<ObjectCount>().holdCount++;
+
+            // SE
+            if (!HoldTailSEPlayed)
+            {
+                HoldTailSEPlayed = true;
+                audioManager.PlaySE_Tap(false, isEX);
+            }
+
             Destroy(tapLine);
             Destroy(holdEffect);
             Destroy(gameObject); 
+        }
+
+        if (!HoldHeadSEPlayed && timing > 0f)
+        {
+            HoldHeadSEPlayed = true;
+            audioManager.PlaySE_Tap(false, isEX);
         }
 
 

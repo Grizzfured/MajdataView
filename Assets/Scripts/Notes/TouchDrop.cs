@@ -28,6 +28,9 @@ public class TouchDrop : MonoBehaviour
     public GameObject[] fans;
     SpriteRenderer[] fansSprite = new SpriteRenderer[7];
 
+    AudioManager audioManager;
+    bool TouchSEPlayed;
+
     private float wholeDuration;
     private float moveDuration;
     private float displayDuration;
@@ -44,6 +47,10 @@ public class TouchDrop : MonoBehaviour
         var notes = GameObject.Find("Notes").transform;
         timeProvider = GameObject.Find("AudioTimeProvider").GetComponent<AudioTimeProvider>();
         multTouchHandler = GameObject.Find("MultTouchHandler").GetComponent<MultTouchHandler>();
+
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        TouchSEPlayed = false;
+
         for (int i = 0; i < 7; i++)
         {
             fansSprite[i] = fans[i].GetComponent<SpriteRenderer>();
@@ -82,6 +89,13 @@ public class TouchDrop : MonoBehaviour
         }
         if (timing > 0f)
         {
+            // SE
+            if (!TouchSEPlayed)
+            {
+                TouchSEPlayed = true;
+                audioManager.PlaySE_Touch(isFirework);
+            }
+
             fireworkEffect.SetActive(true);
             justEffect.SetActive(true);
         }

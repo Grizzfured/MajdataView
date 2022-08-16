@@ -15,6 +15,10 @@ public class TouchHoldDrop : MonoBehaviour
 
     AudioTimeProvider timeProvider;
 
+    AudioManager audioManager;
+    bool TouchHoldHeadSEPlayed;
+    bool TouchHoldTailSEPlayed;
+
     public GameObject[] fans;
     SpriteRenderer[] fansSprite = new SpriteRenderer[6];
     public SpriteMask mask;
@@ -36,6 +40,10 @@ public class TouchHoldDrop : MonoBehaviour
 
         timeProvider = GameObject.Find("AudioTimeProvider").GetComponent<AudioTimeProvider>();
 
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        TouchHoldHeadSEPlayed = false;
+        TouchHoldTailSEPlayed = false;
+
         for (int i = 0; i < 6; i++)
         {
             fansSprite[i] = fans[i].GetComponent<SpriteRenderer>();
@@ -52,8 +60,21 @@ public class TouchHoldDrop : MonoBehaviour
         var pow = -Mathf.Exp(8 * (timing * 0.4f / moveDuration) - 0.85f) + 0.42f;
         var distance = Mathf.Clamp(pow, 0f, 0.4f);
 
+        if (!TouchHoldHeadSEPlayed && timing > 0f)
+        {
+            TouchHoldHeadSEPlayed = true;
+            audioManager.PlaySE_TouchHold(true, isFirework);
+        }
+
         if (timing > lastFor)
         {
+            // SE
+            if (!TouchHoldTailSEPlayed)
+            {
+                TouchHoldTailSEPlayed = true;
+                audioManager.PlaySE_TouchHold(false, isFirework);
+            }
+
             Instantiate(tapEffect, transform.position, transform.rotation);
             GameObject.Find("ObjectCount").GetComponent<ObjectCount>().holdCount++;
             if (isFirework) Instantiate(fireworkEffect, transform.position, transform.rotation);

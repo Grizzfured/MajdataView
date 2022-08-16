@@ -41,6 +41,9 @@ public class StarDrop : MonoBehaviour
     SpriteRenderer lineSpriteRender;
     SpriteRenderer exSpriteRender;
 
+    AudioManager audioManager;
+    bool TapSEPlayed;
+
     ObjectCount objectCount;
     void Start()
     {
@@ -52,6 +55,9 @@ public class StarDrop : MonoBehaviour
         exSpriteRender = transform.GetChild(0).GetComponent<SpriteRenderer>();
         timeProvider = GameObject.Find("AudioTimeProvider").GetComponent<AudioTimeProvider>();
         objectCount = GameObject.Find("ObjectCount").GetComponent<ObjectCount>();
+
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        TapSEPlayed = false;
 
         int sortOrder = (int)(time * -100);
         spriteRenderer.sortingOrder = sortOrder;
@@ -126,6 +132,14 @@ public class StarDrop : MonoBehaviour
         if (timing > 0) {
             if (!isNoHead) {
                 GameObject.Find("TapEffects").GetComponent<TapEffectManager>().PlayEffect(startPosition, isBreak);
+
+                // SE
+                if (!TapSEPlayed)
+                {
+                    TapSEPlayed = true;
+                    audioManager.PlaySE_Tap(isBreak, isEX);
+                }
+
                 if (isBreak) objectCount.breakCount++;
                 else objectCount.tapCount++;
             }
