@@ -64,6 +64,7 @@ public class HttpHandler : MonoBehaviour
         var loader = GameObject.Find("DataLoader").GetComponent<JsonDataLoader>();
         var timeProvider = GameObject.Find("AudioTimeProvider").GetComponent<AudioTimeProvider>();
         var bgManager = GameObject.Find("Background").GetComponent<BGManager>();
+        var audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         var bgCover = GameObject.Find("BackgroundCover").GetComponent<SpriteRenderer>();
         var SongDetail = GameObject.Find("CanvasSongDetail");
 
@@ -77,6 +78,7 @@ public class HttpHandler : MonoBehaviour
             GameObject.Find("Notes").GetComponent<PlayAllPerfect>().enabled = false;
             GameObject.Find("MultTouchHandler").GetComponent<MultTouchHandler>().clearSlots();
 
+            audioManager.LoadBGM(new FileInfo(data.jsonPath).DirectoryName, data.audioSpeed);
             bgManager.LoadBGFromPath(new FileInfo(data.jsonPath).DirectoryName,data.audioSpeed);
             bgCover.color = new Color(0f, 0f, 0f, data.backgroundCover);
         }
@@ -89,6 +91,7 @@ public class HttpHandler : MonoBehaviour
             loader.LoadJson(File.ReadAllText(data.jsonPath), data.startTime);
             GameObject.Find("MultTouchHandler").GetComponent<MultTouchHandler>().clearSlots();
 
+            audioManager.LoadBGM(new FileInfo(data.jsonPath).DirectoryName, data.audioSpeed);
             bgManager.LoadBGFromPath(new FileInfo(data.jsonPath).DirectoryName, data.audioSpeed);
             bgCover.color = new Color(0f, 0f, 0f, data.backgroundCover);
             bgManager.PlaySongDetail();

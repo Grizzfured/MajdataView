@@ -63,6 +63,8 @@ public class AudioManager : MonoBehaviour
     {
         while (timeProvider.AudioTime <= 0) yield return new WaitForEndOfFrame();
         while (BGM.clip.loadState != AudioDataLoadState.Loaded) yield return new WaitForEndOfFrame();
+
+        BGM.time = timeProvider.AudioTime;
         BGM.Play();
     }
 
